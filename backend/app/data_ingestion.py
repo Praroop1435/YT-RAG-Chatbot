@@ -1,9 +1,9 @@
-from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
-from langchain_community.vectorstores import FAISS
-from langchain_core.prompts import PromptTemplate
 import re
+from typing import List
+
+from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled
+from langchain_core.documents import Document
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 ytt_api = YouTubeTranscriptApi()
 
@@ -23,18 +23,17 @@ def extract_video_id(url: str) -> str:
     raise ValueError("Invalid YouTube URL")
 
 
-def fetch_transcript(video_id: str):
-    transcript = ytt_api.fetch(video_id, languages=["en-IN", "hi"])
+def fetch_transcript(video_id: str) -> str:
+    transcript = ytt_api.fetch(video_id, languages=["en-IN", "hi","en"])
 
-    text = " ".join(
+    return " ".join(
         snippet.text for snippet in transcript.snippets
     )
 
-    return {
-        "video_id": transcript.video_id,
-        "language": transcript.language,
-        "is_generated": transcript.is_generated,
-        "text": text
-    }
-    
 
+def split_text(text: str) -> List[Document]:
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,
+        chunk_overlap=200
+    )
+    return splitter.create_documents([text])
