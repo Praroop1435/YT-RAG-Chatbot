@@ -6,7 +6,7 @@ from app.data_ingestion import extract_video_id, fetch_transcript, split_text
 from app.retrieval import create_vector_store, create_retriever
 from app.rag_chain import build_rag_chain
 
-app = FastAPI(title="YouTube RAG Backend")
+app = FastAPI(title="Ytransformer API")
 
 VECTOR_STORE = None
 
@@ -55,13 +55,6 @@ async def query(payload: QueryRequest):
 
     retriever = create_retriever(VECTOR_STORE)
 
-    # 🔍 DEBUG STARTS HERE
-    docs = retriever.invoke(question)
-
-    print("---- RETRIEVED DOCS ----")
-    for i, doc in enumerate(docs):
-        print(f"[{i}] {doc.page_content[:300]}")
-    # 🔍 DEBUG ENDS HERE
 
     rag_chain = build_rag_chain(retriever)
     answer = rag_chain.invoke(question)

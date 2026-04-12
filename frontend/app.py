@@ -9,13 +9,13 @@ QUERY_URL = f"{BACKEND_BASE_URL}/query"
 
 def youtube_rag_frontend():
     st.set_page_config(
-        page_title="YouTube RAG Chatbot",
-        page_icon="🎥",
+        page_title="Ytransformer",
+        page_icon="🤖",
         layout="centered"
     )
 
-    st.title("🎥 YouTube RAG Chatbot")
-    st.caption("Ask questions directly from a YouTube video")
+    st.title("🤖 Ytransformer")
+    st.caption("Transform YouTube content into conversational knowledge")
 
     st.divider()
 
